@@ -7,10 +7,15 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class NewBaseballCard extends JPanel {
 
@@ -36,6 +41,8 @@ public class NewBaseballCard extends JPanel {
     private String image; // filename.txt form
     private ArrayList<BsbCard> cards;
     private Boolean newChanges = false;
+    private JFileChooser fileChooser;
+    private String imagePath;
 
     public NewBaseballCard(Controller c) {
         this.c = c;
@@ -48,9 +55,14 @@ public class NewBaseballCard extends JPanel {
             e.printStackTrace();
         }
 
-        //TODO implement this
         imgBtn.addActionListener(event -> {
-            System.out.println("TODO!");
+            imagePath = uploadFile();
+            System.out.println("[NewBaseballCard.java - 62] " + imagePath);
+            try {
+                picture.setIcon(new ImageIcon(ImageIO.read(new File(imagePath)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+            } catch (NullPointerException | IOException e) {
+                JOptionPane.showMessageDialog(this, Controller.errorLoadingImage, "Error", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         saveBtn.addActionListener(event -> {
@@ -132,6 +144,34 @@ public class NewBaseballCard extends JPanel {
         raritySlider.setValue(0);
         trade.setSelected(false);
         conditionSelection.setSelectedIndex(0);
+    }
+
+    public String uploadFile() {
+        fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        fileChooser.setDialogTitle("Select an image for your card");
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JPEG and PNG images", "png", "jpg"));
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int selection = fileChooser.showOpenDialog(this);
+
+        if (selection == JFileChooser.APPROVE_OPTION) {
+
+            File temp = fileChooser.getSelectedFile();
+            System.out.println(temp.toPath());
+            File clone = new File("Images/" + temp.getName());
+            try {
+                Files.copy(temp.toPath(), clone.toPath(), REPLACE_EXISTING);
+                System.out.println("Files copied");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            System.out.println(clone.getPath());
+            return clone.getPath();
+        }
+        return null;
     }
 
 }
