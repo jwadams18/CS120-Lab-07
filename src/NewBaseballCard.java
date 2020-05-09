@@ -54,10 +54,9 @@ public class NewBaseballCard extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        //Prompts the user with a JFileChooser to select an image
         imgBtn.addActionListener(event -> {
             imagePath = uploadFile();
-            System.out.println("[NewBaseballCard.java - 62] " + imagePath);
             try {
                 picture.setIcon(new ImageIcon(ImageIO.read(new File(imagePath)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
             } catch (NullPointerException | IOException e) {
@@ -65,8 +64,16 @@ public class NewBaseballCard extends JPanel {
             }
         });
 
+        //Saves the
         saveBtn.addActionListener(event -> {
             if (!playerNameEntry.getText().trim().isBlank()) {
+                //Checks for duplicate card
+                for (BsbCard card : c.getCards()) {
+                    if (card.getName().equals(playerNameEntry.getText().trim())) {
+                        JOptionPane.showMessageDialog(this, "Duplicate card found! Please rename this one or edit the other card.", "Duplicate card", JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+                }
                 saveCard();
                 String[] options = {"Add another", "View all", "Return to menu"};
                 //Add Another - 0, View all - 1, Return to menu - 2
@@ -88,6 +95,7 @@ public class NewBaseballCard extends JPanel {
 
         });
 
+        //Closes panel if there are no changes
         cancelBtn.addActionListener(event -> {
             boolean textIsBlank = playerNameEntry.getText().isBlank() && ageEntry.getText().isBlank() && yrsEntry.getText().isBlank();
             boolean isSelected = trade.isSelected();
@@ -122,6 +130,9 @@ public class NewBaseballCard extends JPanel {
         frame.setVisible(true);
     }
 
+    /**
+     * Saves the card, adds it to the Arraylist of all the cards, clears the panel for re-use, and updates the data within the table
+     */
     private void saveCard() {
 
         int age = Integer.parseInt(ageEntry.getText().trim());
@@ -134,8 +145,15 @@ public class NewBaseballCard extends JPanel {
         c.updateTable();
     }
 
+    /**
+     * Removes data input the GUI
+     */
     public void clearValues() {
-        //TODO clear picture selection
+        try {
+            picture.setIcon(new ImageIcon(ImageIO.read(new File("Images/person.png")).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+        } catch (NullPointerException | IOException e) {
+            JOptionPane.showMessageDialog(this, Controller.errorLoadingImage, "Error", JOptionPane.WARNING_MESSAGE);
+        }
         playerNameEntry.setText(null);
         ageEntry.setText(null);
         yrsEntry.setText(null);
@@ -146,6 +164,11 @@ public class NewBaseballCard extends JPanel {
         conditionSelection.setSelectedIndex(0);
     }
 
+    /**
+     * Presents the JFileChooser to select an image to upload to display on the baseball card
+     *
+     * @return the string location of the image, which was copied into project files
+     */
     public String uploadFile() {
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         fileChooser.setDialogTitle("Select an image for your card");
@@ -158,17 +181,12 @@ public class NewBaseballCard extends JPanel {
         if (selection == JFileChooser.APPROVE_OPTION) {
 
             File temp = fileChooser.getSelectedFile();
-            System.out.println(temp.toPath());
             File clone = new File("Images/" + temp.getName());
             try {
                 Files.copy(temp.toPath(), clone.toPath(), REPLACE_EXISTING);
-                System.out.println("Files copied");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-            System.out.println(clone.getPath());
             return clone.getPath();
         }
         return null;
