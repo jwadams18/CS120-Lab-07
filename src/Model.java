@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Model {
 
@@ -18,10 +19,11 @@ public class Model {
     public JFrame mainFrame;
     public JPanel[] panels = new JPanel[4];
     public JPanel prevPanel, currentPanel;
-    public ArrayList<bsbCard> cards = new ArrayList<>();
+    public ArrayList<BsbCard> cards = new ArrayList<>();
     public Object[][] tableData;
     public DefaultTableModel tableModel;
     public JTable cardTable;
+    public HashMap<String, Integer> deckOrder = new HashMap<>();
 
 
     /**
@@ -37,35 +39,37 @@ public class Model {
         }
         if(dir.list() != null){
             for(String strng : dir.list()){
-                cards.add(new bsbCard(strng));
+                cards.add(new BsbCard(strng));
             }
         }
     }
 
     public void initializeTable(){
-        tableData = new Object[cards.size()][7];
+        tableData = new Object[cards.size()][8];
 
         for(int i = 0; i < cards.size(); i++){
             Object[] player = tableData[i];
-            bsbCard card = cards.get(i);
+            BsbCard card = cards.get(i);
 
             player[0] = card.getName();
+            player[1] = card.getAge();
+            player[2] = card.getTeam().getName();
 //            System.out.println(card.getPos());
-            player[1] = card.getPos().getName();
-            player[2] = card.getAge();
-            player[3] = card.getYrsPlayed();
+            player[3] = card.getPos().getName();
+
+            player[4] = card.getYrsPlayed();
 //            System.out.println(card.getCondition());
-            player[4] = card.getCondition();
+            player[5] = card.getCondition();
 
             StringBuilder sb = new StringBuilder();
             for(int j = 0; j < card.getRarity(); j++){
                 sb.append("\u2605");
             }
-            player[5] = sb.toString();
+            player[6] = sb.toString();
             if(card.isTrade()){
-                player[6] = "\u2714";
+                player[7] = "\u2714";
             } else {
-                player[6] = "\u0078";
+                player[7] = "\u0078";
             }
         }
     }
