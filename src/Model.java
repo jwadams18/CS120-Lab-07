@@ -13,11 +13,12 @@ import java.util.HashMap;
 
 public class Model {
 
-    public enum Panel {menu, newCard, viewCard, tableView}
+    public JPanel[] panels = new JPanel[3];
 
 
     public JFrame mainFrame;
-    public JPanel[] panels = new JPanel[4];
+
+    public enum Panel {menu, newCard, tableView}
     public JPanel prevPanel, currentPanel;
     public ArrayList<BsbCard> cards = new ArrayList<>();
     public Object[][] tableData;
