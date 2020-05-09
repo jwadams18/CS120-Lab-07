@@ -45,11 +45,13 @@ public class TableView extends JPanel implements Serializable {
         //Shrinks age
         cardTable.getColumnModel().getColumn(1).setPreferredWidth(30);
         //Expands Team
-        cardTable.getColumnModel().getColumn(2).setPreferredWidth(125);
+        cardTable.getColumnModel().getColumn(2).setPreferredWidth(130);
         //Expands Position
         cardTable.getColumnModel().getColumn(3).setPreferredWidth(95);
         //Shrinks trade setting
         cardTable.getColumnModel().getColumn(7).setPreferredWidth(55);
+        //Expands name
+        cardTable.getColumnModel().getColumn(0).setPreferredWidth(105);
         for (int i = 1; i < cardTable.getColumnCount(); i++) {
             cardTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
@@ -59,6 +61,7 @@ public class TableView extends JPanel implements Serializable {
         cardTable.getTableHeader().setReorderingAllowed(false);
         container.setPreferredSize(new Dimension(600, 300));
 
+        //Prompts the user with a selection box of the currently owned cards to edit one
         editBtn.addActionListener(event -> {
             String[] currentCardsName = new String[c.getCards().size()];
             for (int i = 0; i < currentCardsName.length; i++) {
@@ -74,9 +77,12 @@ public class TableView extends JPanel implements Serializable {
             }
         });
 
+        //Opens the menu panel
         closeBtn.addActionListener(event -> {
             c.openPanel(Model.Panel.menu);
         });
+
+        //Opens the newCard panel
         addBtn.addActionListener(event -> {
             c.openPanel(Model.Panel.newCard);
         });
