@@ -1,7 +1,7 @@
 /*
         James Adams
         Lab-07-jadams18
-        newBaseballCard.java
+        NewBaseballCard.java
         @username jwadams18
          */
 
@@ -12,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class newBaseballCard extends JPanel {
+public class NewBaseballCard extends JPanel {
 
     public JPanel mainPanel;
     private JLabel playerNameLabel;
     private JTextField playerNameEntry;
     private JLabel positionLabel;
     private JComboBox positionCombo;
-    private JLabel rarietyLabel;
+    private JLabel rarityLabel;
     private JSlider raritySlider;
     private JLabel tradeLabel;
     private JCheckBox trade;
@@ -34,10 +34,10 @@ public class newBaseballCard extends JPanel {
     private JTextField yrsEntry;
     private Controller c;
     private String image; // filename.txt form
-    private ArrayList<bsbCard> cards;
+    private ArrayList<BsbCard> cards;
     private Boolean newChanges = false;
 
-    public newBaseballCard(Controller c) {
+    public NewBaseballCard(Controller c) {
         this.c = c;
         cards = c.getCards();
 
@@ -106,7 +106,7 @@ public class newBaseballCard extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.pack();
-        frame.add(new newBaseballCard(new Controller(frame)).mainPanel);
+        frame.add(new NewBaseballCard(new Controller(frame)).mainPanel);
         frame.setVisible(true);
     }
 
@@ -114,7 +114,7 @@ public class newBaseballCard extends JPanel {
 
         int age = Integer.parseInt(ageEntry.getText().trim());
         int yrsPlayed = Integer.parseInt(yrsEntry.getText().trim());
-        bsbCard newCard = new bsbCard(playerNameEntry.getText().trim(), image, age, yrsPlayed, teamSelection.getSelectedIndex(),
+        BsbCard newCard = new BsbCard(playerNameEntry.getText().trim(), image, age, yrsPlayed, teamSelection.getSelectedIndex(),
                 positionCombo.getSelectedIndex(), raritySlider.getValue(), conditionSelection.getSelectedIndex(), trade.isSelected());
         newCard.save();
         cards.add(newCard);
