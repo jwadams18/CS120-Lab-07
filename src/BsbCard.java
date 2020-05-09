@@ -1,7 +1,7 @@
 /*
         James Adams
         Lab-07-jadams18
-        bsbCard.java
+        BsbCard.java
         @username jwadams18
          */
 
@@ -9,7 +9,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class bsbCard {
+public class BsbCard {
 
     private String image, name;
     private Team team;
@@ -18,7 +18,7 @@ public class bsbCard {
     private Condition condition;
     private boolean trade;
 
-    public bsbCard(String name, String image, int age, int yrsPlayed, int team, int pos, int rarity, int condition, boolean trade){
+    public BsbCard(String name, String image, int age, int yrsPlayed, int team, int pos, int rarity, int condition, boolean trade) {
 
         this.name = name;
         this.image = image;
@@ -32,35 +32,11 @@ public class bsbCard {
 
     }
 
-    private void setTeam(int team) {
-        for(Team t: Team.values()){
-            if(t.getIndex() == team){
-                this.team = t;
-            }
-        }
-    }
-
-    private void setPosition(int pos){
-        for(Position p : Position.values()){
-            if(p.getIndex() == pos){
-                this.pos = p;
-            }
-        }
-    }
-
-    private void setCondition(int c){
-        for(Condition condition : Condition.values()){
-            if(condition.getIndex() == c){
-                this.condition = condition;
-            }
-        }
-    }
-
     /**
      * Used to split data from a file to create a game
      * @param fileName name of the file in the Games directory
      */
-    public bsbCard(String fileName){
+    public BsbCard(String fileName) {
 
         String lineOData = null;
         try {
@@ -79,7 +55,7 @@ public class bsbCard {
 
         //Sets the team name
         for(Team t : Team.values()){
-            if(t.getName().equals(elements[4])){
+            if (t.toString().equals(elements[4])) {
                 this.team = t;
                 break;
             }
@@ -99,6 +75,30 @@ public class bsbCard {
         }
 
 
+    }
+
+    public void setTeam(int team) {
+        for (Team t : Team.values()) {
+            if (t.getIndex() == team) {
+                this.team = t;
+            }
+        }
+    }
+
+    public void setPosition(int pos) {
+        for (Position p : Position.values()) {
+            if (p.getIndex() == pos) {
+                this.pos = p;
+            }
+        }
+    }
+
+    public void setCondition(int c) {
+        for (Condition condition : Condition.values()) {
+            if (condition.getIndex() == c) {
+                this.condition = condition;
+            }
+        }
     }
 
     public void save(){
@@ -134,6 +134,27 @@ public class bsbCard {
         }
 
     }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setYrs(int yrs) {
+        this.yrsPlayed = yrs;
+    }
+
+    public void setRarity(int rarity) {
+        this.rarity = rarity;
+    }
+
+    public void setTrade(boolean trade) {
+        this.trade = trade;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
 
     public String getImageFileStr() {
