@@ -7,11 +7,14 @@
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Controller {
 
     private Model m;
+
+    public static String errorLoadingImage = "Error loading selected file or no file was selected. Try again";
 
     public Controller(JFrame frame){
 
@@ -23,7 +26,7 @@ public class Controller {
     }
 
     public void updateTable(){
-        m.panels[3] = new tableView(this).mainPanel;
+        m.panels[3] = new TableView(this).mainPanel;
 
     }
 
@@ -43,11 +46,11 @@ public class Controller {
 
         m.panels[0] = new ClassifierMenu(this).mainPanel;
 
-        m.panels[1] = new newBaseballCard(this).mainPanel;
+        m.panels[1] = new NewBaseballCard(this).mainPanel;
 
-        m.panels[2] = new viewBaseballCard(this).mainPanel;
+        m.panels[2] = new ViewBaseballCard(this).mainPanel;
 
-        m.panels[3] = new tableView(this).mainPanel;
+        m.panels[3] = new TableView(this).mainPanel;
     }
 
     public void openPanel(Model.Panel type){
@@ -74,11 +77,46 @@ public class Controller {
         m.mainFrame.pack();
     }
 
-    public ArrayList<bsbCard> getCards(){
+    public void openViewCard(JPanel panel) {
+        m.prevPanel = m.currentPanel;
+        m.currentPanel = panel;
+        if (m.prevPanel != null) {
+            m.mainFrame.remove(m.prevPanel);
+        }
+
+        m.mainFrame.add(m.currentPanel);
+        m.mainFrame.repaint();
+        m.mainFrame.pack();
+    }
+
+    public ArrayList<BsbCard> getCards() {
         return m.cards;
     }
 
     public void initTable() {
         m.initializeTable();
     }
+
+    public BsbCard getCard(String selection) {
+        return m.cards.get(m.deckOrder.get(selection));
+    }
+
+    public void putInDeck(BsbCard temp) {
+        m.deckOrder.put(temp.getName(), m.cards.size());
+    }
+
+    public void delete(BsbCard card) {
+        File cardFile = new File("Cards/" + card.getName() + ".txt");
+        if (cardFile.exists()) {
+            cardFile.delete();
+        }
+        int index = m.deckOrder.get(card.getName());
+        m.cards.remove(index);
+        m.deckOrder.forEach((k, v) -> {
+            System.out.println(k + " " + v);
+        });
+        m.deckOrder.remove(card.getName(), null);
+        updateTable();
+    }
+
 }
