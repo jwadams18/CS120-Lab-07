@@ -48,10 +48,15 @@ public class ViewBaseballCard extends JPanel {
     public ViewBaseballCard(Controller c) {
         this.c = c;
         cards = c.getCards();
-//        setImage("person.png");
+        //General image when loaded
+        setImage("Images/person.png");
 
+        //User image upload
         imgBtn.addActionListener(event -> {
             imagePath = uploadFile();
+            if (imagePath != null)
+                currentCard.setImage(imagePath);
+
             System.out.println("[NewBaseballCard.java - 62] " + imagePath);
             try {
                 picture.setIcon(new ImageIcon(ImageIO.read(new File(imagePath)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
@@ -59,6 +64,8 @@ public class ViewBaseballCard extends JPanel {
                 JOptionPane.showMessageDialog(this, Controller.errorLoadingImage, "Error", JOptionPane.WARNING_MESSAGE);
             }
         });
+
+        //Action listeners for combo boxes, slider, and checkbox
 
         teamSelection.addActionListener(event -> {
             currentCard.setTeam(teamSelection.getSelectedIndex());
@@ -87,6 +94,7 @@ public class ViewBaseballCard extends JPanel {
             newChanges = true;
         });
 
+        //Delete button, with confirm message
         deleteBtn.addActionListener(event -> {
             int selection = JOptionPane.showConfirmDialog(this, "Delete " + currentCard.getName() + "'s card?", "Confrim delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (selection == JOptionPane.YES_OPTION) {
@@ -95,6 +103,7 @@ public class ViewBaseballCard extends JPanel {
             }
         });
 
+        //Cancel button, ask about saving before closes
         cancelBtn.addActionListener(event -> {
             if (newChanges) {
                 int selection = JOptionPane.showConfirmDialog(this, "Save recent changes?", "Save changes", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -123,8 +132,12 @@ public class ViewBaseballCard extends JPanel {
         frame.setVisible(true);
     }
 
+    /**
+     * Loads the data into the GUI from the bsbcard object which was loaded from file
+     *
+     * @param card the object holding all data from file
+     */
     public void setValues(BsbCard card) {
-        System.out.println("[VBC.java-69] " + card.getName() + " " + card.getTeam() + " " + card.getImageFileStr());
         currentCard = card;
         playerName.setText(card.getName());
         teamSelection.setSelectedIndex(card.getTeam().getIndex());
@@ -135,26 +148,43 @@ public class ViewBaseballCard extends JPanel {
         yrsEntry.setText(Integer.toString(card.getYrsPlayed()));
         trade.setSelected(card.isTrade());
         conditionSelection.setSelectedIndex(card.getCondition().getIndex());
-        if (card.getImageFileStr() != null) {
-
+        if (card.getImage() == null) {
+            setImage("Images/person.png");
+        } else {
+            setImage(card.getImage());
         }
 
     }
 
+    /**
+     * Used to set images
+     * @param image Images/{file name}
+     */
     public void setImage(String image) {
         try {
-            picture.setIcon(new ImageIcon(ImageIO.read(new File("Images/" + image)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+            picture.setIcon(new ImageIcon(ImageIO.read(new File(image)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Saves the data to the card object and updates table data
+     */
     private void saveCard() {
+        if (imagePath != null)
+            currentCard.setImage(imagePath);
+
         currentCard.setAge(Integer.parseInt(ageEntry.getText().trim()));
         currentCard.setYrs(Integer.parseInt(yrsEntry.getText().trim()));
+        currentCard.save();
         c.updateTable();
     }
 
+    /**
+     * Changes based on the value of the slider to display the rarity of the current card below the name
+     * @param stars 0 - 5
+     */
     public void setStarLabel(int stars) {
         StringBuilder sb = new StringBuilder();
         if (stars == 0) {
@@ -168,29 +198,28 @@ public class ViewBaseballCard extends JPanel {
         starLabel.setText(sb.toString());
     }
 
+    /**
+     * Prompts the user with JFilechooser to upload an image to display on the bsbcard
+     * @return a string to the file located in Images/
+     */
     public String uploadFile() {
         fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        fileChooser.setDialogTitle("Select an image for your new card");
+        fileChooser.setDialogTitle("Select an image for your card");
         fileChooser.setMultiSelectionEnabled(false);
         fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JPEG and PNG images", "png", "jpg"));
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JPG and PNG images", "png", "jpg"));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int selection = fileChooser.showOpenDialog(this);
 
         if (selection == JFileChooser.APPROVE_OPTION) {
 
             File temp = fileChooser.getSelectedFile();
-            System.out.println(temp.toPath());
             File clone = new File("Images/" + temp.getName());
             try {
                 Files.copy(temp.toPath(), clone.toPath(), REPLACE_EXISTING);
-                System.out.println("Files copied");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-            System.out.println(clone.getPath());
             return clone.getPath();
         }
         return null;
