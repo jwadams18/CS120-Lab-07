@@ -18,6 +18,19 @@ public class BsbCard {
     private Condition condition;
     private boolean trade;
 
+    /**
+     * Creates a baseball card
+     *
+     * @param name      player name
+     * @param image     location in Images/
+     * @param age
+     * @param yrsPlayed
+     * @param team      index of the selection box, will be translated into a Team based on indices defined in Team.java
+     * @param pos       index of the selection box, will be translated into a Position based on the indices defined in Position.java
+     * @param rarity    0 - 5
+     * @param condition index of the selection box, will be translated into a Condtion based on the indices defined in Condition.java
+     * @param trade
+     */
     public BsbCard(String name, String image, int age, int yrsPlayed, int team, int pos, int rarity, int condition, boolean trade) {
 
         this.name = name;
@@ -51,7 +64,11 @@ public class BsbCard {
         this.age = Integer.parseInt(elements[2]);
         this.yrsPlayed = Integer.parseInt(elements[3]);
         this.rarity = Integer.parseInt(elements[6]);
-        this.trade = Boolean.getBoolean(elements[7]);
+        if (elements[8].equals("true")) {
+            this.trade = true;
+        } else {
+            this.trade = false;
+        }
 
         //Sets the team name
         for(Team t : Team.values()){
@@ -77,6 +94,49 @@ public class BsbCard {
 
     }
 
+    /**
+     * Saves the properties of the baseball card to a file
+     */
+    public void save() {
+        File file = new File("Cards/" + this.getName() + ".txt");
+        if (!file.exists()) {
+            try {
+                boolean success = file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        PrintWriter pw = null;
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+
+        try {
+            fw = new FileWriter(file);
+            bw = new BufferedWriter(fw);
+            pw = new PrintWriter(bw);
+
+            pw.print(this.name + ",");
+            pw.print(this.image + ",");
+            pw.print(this.age + ",");
+            pw.print(this.yrsPlayed + ",");
+            pw.print(this.team + ",");
+            pw.print(this.pos.getName() + ",");
+            pw.print(this.rarity + ",");
+            pw.print(this.condition.getName() + ",");
+            pw.print(this.trade);
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /*
+
+                Start getters / setters
+
+     */
+
     public void setTeam(int team) {
         for (Team t : Team.values()) {
             if (t.getIndex() == team) {
@@ -101,40 +161,6 @@ public class BsbCard {
         }
     }
 
-    public void save(){
-        File file = new File("Cards/"+this.getName()+".txt");
-        if(!file.exists()){
-            try {
-                boolean success = file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        PrintWriter pw = null;
-        FileWriter fw = null;
-        BufferedWriter bw = null;
-
-        try{
-            fw = new FileWriter(file);
-            bw = new BufferedWriter(fw);
-            pw = new PrintWriter(bw);
-
-            pw.print(this.name+",");
-            pw.print(this.image+",");
-            pw.print(this.age+",");
-            pw.print(this.yrsPlayed+",");
-            pw.print(this.team+",");
-            pw.print(this.pos.getName()+",");
-            pw.print(this.rarity+",");
-            pw.print(this.condition.getName()+",");
-            pw.print(this.trade);
-            pw.close();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     public void setAge(int age) {
         this.age = age;
     }
@@ -156,8 +182,7 @@ public class BsbCard {
     }
 
 
-
-    public String getImageFileStr() {
+    public String getImage() {
         return image;
     }
 
