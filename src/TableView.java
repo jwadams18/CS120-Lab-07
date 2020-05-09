@@ -1,7 +1,7 @@
 /*
         James Adams
         Lab-07-jadams18
-        tableView.java
+        TableView.java
         @username jwadams18
          */
 
@@ -9,10 +9,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class tableView {
+public class TableView extends JPanel implements Serializable {
 
+    private static final long serialVersionUID = 173044072361605644L;
     public JPanel mainPanel;
     private JLabel title;
     private JButton closeBtn;
@@ -21,13 +23,13 @@ public class tableView {
     private JTable cardTable;
     private JButton addBtn;
     private Controller c;
-    private ArrayList<bsbCard> cards;
+    private ArrayList<BsbCard> cards;
     private DefaultTableModel model;
 
-    public tableView(Controller c) {
+    public TableView(Controller c) {
         this.c = c;
         cards = c.getCards();
-        String[] colTitles = {"Player name", "Position", "Age", "Yrs. Played", "Condition", "Rarity", "Tradable"};
+        String[] colTitles = {"Player name", "Age", "Team", "Position", "Yrs. Played", "Condition", "Rarity", "Tradable"};
         c.initTable();
         model = new DefaultTableModel(c.getTableData(), colTitles) {
             @Override
@@ -40,20 +42,36 @@ public class tableView {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         cardTable.setModel(model);
-        cardTable.getColumnModel().getColumn(2).setPreferredWidth(25);
-        cardTable.getColumnModel().getColumn(1).setPreferredWidth(105);
-        for (int i = 2; i < cardTable.getColumnCount(); i++) {
+        //Shrinks age
+        cardTable.getColumnModel().getColumn(1).setPreferredWidth(30);
+        //Expands Team
+        cardTable.getColumnModel().getColumn(2).setPreferredWidth(125);
+        //Expands Position
+        cardTable.getColumnModel().getColumn(3).setPreferredWidth(95);
+        //Shrinks trade setting
+        cardTable.getColumnModel().getColumn(7).setPreferredWidth(55);
+        for (int i = 1; i < cardTable.getColumnCount(); i++) {
             cardTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        cardTable.setBounds(20, 20, 200, 150);
+        cardTable.setBounds(20, 20, 225, 150);
         cardTable.setDragEnabled(false);
         cardTable.getTableHeader().setReorderingAllowed(false);
         container.setPreferredSize(new Dimension(600, 300));
 
-        //TODO implement this
         editBtn.addActionListener(event -> {
+            String[] currentCardsName = new String[c.getCards().size()];
+            for (int i = 0; i < currentCardsName.length; i++) {
+                ArrayList<BsbCard> temp = c.getCards();
+                currentCardsName[i] = temp.get(i).getName();
 
+            }
+            String selection = (String) JOptionPane.showInputDialog(this, "Please select a card to edit", "Edit card", JOptionPane.QUESTION_MESSAGE, null, currentCardsName, currentCardsName[0]);
+            if (selection != null) {
+                ViewBaseballCard vbc = new ViewBaseballCard(c);
+                vbc.setValues(c.getCard(selection));
+                c.openViewCard(vbc.mainPanel);
+            }
         });
 
         closeBtn.addActionListener(event -> {
@@ -68,7 +86,7 @@ public class tableView {
         JFrame frame = new JFrame("Jframe");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.add(new tableView(new Controller(frame)).mainPanel);
+        frame.add(new TableView(new Controller(frame)).mainPanel);
         frame.pack();
         frame.setVisible(true);
     }
