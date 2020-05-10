@@ -36,7 +36,7 @@ public class Model {
         File dir = new File("Cards");
         if(!dir.exists()){
             boolean success = dir.mkdir();
-            System.out.println("Games directory created!");
+            System.out.println("Cards directory created!");
         }
         if(dir.list() != null){
             for(String strng : dir.list()){
@@ -45,6 +45,22 @@ public class Model {
         }
     }
 
+    /**
+     * Checks the directory is created
+     */
+    public void initializeImages() {
+
+        File dir = new File("Images");
+        if (!dir.exists()) {
+            boolean success = dir.mkdir();
+            System.out.println("Images directory created!");
+        }
+    }
+
+
+    /**
+     * Loads the player data into the table from the Bsbcard objects
+     */
     public void initializeTable(){
         tableData = new Object[cards.size()][8];
 
