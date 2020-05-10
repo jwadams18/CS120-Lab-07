@@ -20,6 +20,7 @@ public class Controller {
         this.m = new Model();
         m.mainFrame = frame;
         m.initializeCards();
+        m.initializeImages();
         loadPanels();
 
     }
@@ -48,9 +49,7 @@ public class Controller {
 
         m.panels[1] = new NewBaseballCard(this).mainPanel;
 
-        m.panels[2] = new ViewBaseballCard(this).mainPanel;
-
-        m.panels[3] = new TableView(this).mainPanel;
+        m.panels[2] = new TableView(this).mainPanel;
     }
 
     /**
