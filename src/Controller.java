@@ -29,8 +29,7 @@ public class Controller {
      * Creates a new table panel, so the data reflects the changes made
      */
     public void updateTable(){
-        m.panels[3] = new TableView(this).mainPanel;
-
+        m.panels[2] = new TableView(this).mainPanel;
     }
 
     /**
