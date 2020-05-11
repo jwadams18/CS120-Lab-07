@@ -137,6 +137,7 @@ public class BsbCard {
 
      */
 
+    //Loops through the Enum to match the given team's index to the correct Enum
     public void setTeam(int team) {
         for (Team t : Team.values()) {
             if (t.getIndex() == team) {
@@ -145,6 +146,7 @@ public class BsbCard {
         }
     }
 
+    //Loops through the Enum to match the given position's index to the correct Enum
     public void setPosition(int pos) {
         for (Position p : Position.values()) {
             if (p.getIndex() == pos) {
@@ -153,6 +155,7 @@ public class BsbCard {
         }
     }
 
+    //Loops through the Enum to match the given condition's index to the correct Enum
     public void setCondition(int c) {
         for (Condition condition : Condition.values()) {
             if (condition.getIndex() == c) {
