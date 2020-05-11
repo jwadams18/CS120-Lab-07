@@ -150,17 +150,22 @@ public class ViewBaseballCard extends JPanel {
      * @param image file name, assumed to be in images
      */
     public void setImage(String image) {
+        //had to handle loading from file producing "null" while creation in new menu produced null object
         File imagePath;
-        if (!image.equals("null")) {
-            imagePath = new File("Images/" + image);
-        } else {
-            System.out.println("Displaying image person.png due to null loaded from card.");
-            imagePath = new File("Images/person.png");
-        }
+
         try {
+            if (!image.equals("null")) {
+                imagePath = new File("Images/" + image);
+            } else {
+                System.out.println("Displaying image person.png due to null loaded from card.");
+                imagePath = new File("Images/person.png");
+            }
             picture.setIcon(new ImageIcon(ImageIO.read(imagePath).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (NullPointerException e) {
+            System.out.println("Displaying image person.png due to null loaded from card.");
+            setImage("person.png");
         }
     }
 
