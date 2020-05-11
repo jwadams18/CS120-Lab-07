@@ -43,6 +43,7 @@ public class NewBaseballCard extends JPanel {
     private Boolean newChanges = false;
     private JFileChooser fileChooser;
     private String imagePath;
+    private BsbCard newCard;
 
     public NewBaseballCard(Controller c) {
         this.c = c;
@@ -137,7 +138,7 @@ public class NewBaseballCard extends JPanel {
 
         int age = Integer.parseInt(ageEntry.getText().trim());
         int yrsPlayed = Integer.parseInt(yrsEntry.getText().trim());
-        BsbCard newCard = new BsbCard(playerNameEntry.getText().trim(), image, age, yrsPlayed, teamSelection.getSelectedIndex(),
+        newCard = new BsbCard(playerNameEntry.getText().trim(), image, age, yrsPlayed, teamSelection.getSelectedIndex(),
                 positionCombo.getSelectedIndex(), raritySlider.getValue(), conditionSelection.getSelectedIndex(), trade.isSelected());
         newCard.save();
         cards.add(newCard);
