@@ -42,27 +42,20 @@ public class ViewBaseballCard extends JPanel {
     private ArrayList<BsbCard> cards;
     private boolean newChanges = false;
     private BsbCard currentCard;
-    private String imagePath;
+    private String imageName;
     private JFileChooser fileChooser;
 
     public ViewBaseballCard(Controller c) {
         this.c = c;
         cards = c.getCards();
         //General image when loaded
-        setImage("Images/person.png");
+        setImage("person.png");
 
         //User image upload
         imgBtn.addActionListener(event -> {
-            imagePath = uploadFile();
-            if (imagePath != null)
-                currentCard.setImage(imagePath);
-
-            System.out.println("[NewBaseballCard.java - 62] " + imagePath);
-            try {
-                picture.setIcon(new ImageIcon(ImageIO.read(new File(imagePath)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
-            } catch (NullPointerException | IOException e) {
-                JOptionPane.showMessageDialog(this, Controller.errorLoadingImage, "Error", JOptionPane.WARNING_MESSAGE);
-            }
+            imageName = uploadFile();
+            currentCard.setImage(imageName);
+            setImage(imageName);
         });
 
         //Action listeners for combo boxes, slider, and checkbox
@@ -148,21 +141,24 @@ public class ViewBaseballCard extends JPanel {
         yrsEntry.setText(Integer.toString(card.getYrsPlayed()));
         trade.setSelected(card.isTrade());
         conditionSelection.setSelectedIndex(card.getCondition().getIndex());
-        if (card.getImage() != null) {
-            setImage("Images/person.png");
-        } else {
-            setImage(card.getImage());
-        }
+        setImage(card.getImage());
 
     }
 
     /**
      * Used to set images
-     * @param image Images/{file name}
+     * @param image file name, assumed to be in images
      */
     public void setImage(String image) {
+        File imagePath;
+        if (!image.equals("null")) {
+            imagePath = new File("Images/" + image);
+        } else {
+            System.out.println("Displaying image person.png due to null loaded from card.");
+            imagePath = new File("Images/person.png");
+        }
         try {
-            picture.setIcon(new ImageIcon(ImageIO.read(new File(image)).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+            picture.setIcon(new ImageIcon(ImageIO.read(imagePath).getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,8 +168,8 @@ public class ViewBaseballCard extends JPanel {
      * Saves the data to the card object and updates table data
      */
     private void saveCard() {
-        if (imagePath != null)
-            currentCard.setImage(imagePath);
+        if (imageName != null)
+            currentCard.setImage(imageName);
 
         currentCard.setAge(Integer.parseInt(ageEntry.getText().trim()));
         currentCard.setYrs(Integer.parseInt(yrsEntry.getText().trim()));
@@ -220,7 +216,7 @@ public class ViewBaseballCard extends JPanel {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return clone.getPath();
+            return clone.getName();
         }
         return null;
     }
