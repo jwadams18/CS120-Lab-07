@@ -29,7 +29,7 @@ public class TableView extends JPanel implements Serializable {
     public TableView(Controller c) {
         this.c = c;
         cards = c.getCards();
-        String[] colTitles = {"Player name", "Age", "Team", "Position", "Yrs. Played", "Condition", "Rarity", "Tradable"};
+        String[] colTitles = {"Player name", "Age", "Team", "Position", "Yrs. Played", "Condition", "Rarity", "Trade?"};
         c.initTable();
         model = new DefaultTableModel(c.getTableData(), colTitles) {
             @Override
@@ -45,13 +45,15 @@ public class TableView extends JPanel implements Serializable {
         //Shrinks age
         cardTable.getColumnModel().getColumn(1).setPreferredWidth(30);
         //Expands Team
-        cardTable.getColumnModel().getColumn(2).setPreferredWidth(130);
+        cardTable.getColumnModel().getColumn(2).setPreferredWidth(140);
         //Expands Position
-        cardTable.getColumnModel().getColumn(3).setPreferredWidth(95);
+        cardTable.getColumnModel().getColumn(3).setPreferredWidth(100);
         //Shrinks trade setting
         cardTable.getColumnModel().getColumn(7).setPreferredWidth(55);
         //Expands name
         cardTable.getColumnModel().getColumn(0).setPreferredWidth(105);
+        //Expands condition
+        cardTable.getColumnModel().getColumn(5).setPreferredWidth(95);
         for (int i = 1; i < cardTable.getColumnCount(); i++) {
             cardTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
