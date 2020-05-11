@@ -71,11 +71,9 @@ public class Model {
             player[0] = card.getName();
             player[1] = card.getAge();
             player[2] = card.getTeam().getName();
-//            System.out.println(card.getPos());
             player[3] = card.getPos().getName();
 
             player[4] = card.getYrsPlayed();
-//            System.out.println(card.getCondition());
             player[5] = card.getCondition();
 
             StringBuilder sb = new StringBuilder();
