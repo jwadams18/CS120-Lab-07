@@ -148,7 +148,7 @@ public class ViewBaseballCard extends JPanel {
         yrsEntry.setText(Integer.toString(card.getYrsPlayed()));
         trade.setSelected(card.isTrade());
         conditionSelection.setSelectedIndex(card.getCondition().getIndex());
-        if (card.getImage() == null) {
+        if (card.getImage() != null) {
             setImage("Images/person.png");
         } else {
             setImage(card.getImage());
