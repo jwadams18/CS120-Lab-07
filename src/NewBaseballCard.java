@@ -190,7 +190,7 @@ public class NewBaseballCard extends JPanel {
             }
             return clone.getPath();
         }
-        return null;
+        return "null";
     }
 
 }
